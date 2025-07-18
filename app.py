@@ -78,8 +78,8 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
-
-VT_API_KEY = os.getenv('e337abac5c0db3a50ee6fe5f485253e943cfaf4a7b80ccdfff2867edd0974df1')
+    
+VT_API_KEY = os.getenv('VT_API_KEY')
 if not VT_API_KEY:
     raise RuntimeError("❌ Clé API VirusTotal manquante. Vérifiez VT_API_KEY dans Render.")
 
