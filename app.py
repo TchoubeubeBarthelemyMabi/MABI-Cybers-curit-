@@ -17,11 +17,6 @@ try:
 except ImportError:
     pass
 
-try:
-    import email_validator
-except ImportError:
-    print("❌ email_validator n’est pas installé")
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'ok')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mabi.db'
@@ -174,7 +169,6 @@ def vulnscan():
 def history():
     histories = ScanHistory.query.filter_by(user_id=current_user.id).order_by(ScanHistory.timestamp.desc()).all()
     return render_template('history.html', histories=histories)
-
 @app.route('/export-history', methods=['POST'])
 @login_required
 def export_history():
@@ -207,17 +201,16 @@ def export_history():
         }
     )
 
+
+
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         u = User.query.filter_by(email=form.email.data).first()
         if u and u.check_password(form.password.data):
-            login_user(u)
-            flash("Connexion réussie !", "success")
-            return redirect(url_for('home'))
-        else:
-            flash("Email ou mot de passe invalide.", "danger")
+            login_user(u); flash("Connexion réussie !","success"); return redirect(url_for('home'))
+        flash("Email ou mot de passe invalide.","danger")
     return render_template('login.html', form=form)
 
 @app.route('/signup', methods=['GET','POST'])
@@ -225,4 +218,28 @@ def signup():
     form = SignupForm()
     if form.validate_on_submit():
         if User.query.filter_by(email=form.email.data).first():
-            flash("
+            flash("Email déjà utilisé.","warning"); return redirect(url_for('signup'))
+        u=User(email=form.email.data); u.set_password(form.password.data)
+        db.session.add(u); db.session.commit()
+        flash("Inscription réussie.","success"); return redirect(url_for('login'))
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user(); flash("Déconnexion réussie.","info"); return redirect(url_for('login'))
+
+@app.route('/account')
+@login_required
+def account():
+    return render_template('account.html')
+
+@app.route('/about')
+@login_required
+def about():
+    return render_template('about.html')
+
+attach_security(app)
+
+if __name__ == '__main__':
+    app.run(debug=True)
