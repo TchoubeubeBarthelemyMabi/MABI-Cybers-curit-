@@ -82,13 +82,10 @@
         <a href="{{ url_for('logout') }}">Déconnexion</a>
     {% else %}
         <a href="{{ url_for('login') }}">Connexion</a>
-        {# Décommente cette ligne si tu crées la route signup #}
         {# <a href="{{ url_for('signup') }}">Inscription</a> #}
     {% endif %}
     <a href="{{ url_for('vulnscan') }}">Scanner sécurité</a>
-    <li class="nav-item">
-    <a class="nav-link" href="{{ url_for('about') }}">À propos</a>
-</li>
+    <a href="{{ url_for('about') }}">À propos</a>
 </nav>
 
 <div class="content">
