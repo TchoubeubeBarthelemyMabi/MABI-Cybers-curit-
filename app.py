@@ -200,17 +200,17 @@ def export_history():
             'Content-Disposition': 'attachment; filename="historique_scans.csv"'
         }
     )
-
-
-
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         u = User.query.filter_by(email=form.email.data).first()
         if u and u.check_password(form.password.data):
-            login_user(u); flash("Connexion réussie !","success"); return redirect(url_for('home'))
-        flash("Email ou mot de passe invalide.","danger")
+            login_user(u)
+            flash("Connexion réussie !", "success")
+            return redirect(url_for('home'))
+        else:
+            flash("Email ou mot de passe invalide.", "danger")
     return render_template('login.html', form=form)
 
 @app.route('/signup', methods=['GET','POST'])
