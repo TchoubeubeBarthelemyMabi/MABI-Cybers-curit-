@@ -17,6 +17,11 @@ try:
 except ImportError:
     pass
 
+try:
+    import email_validator
+except ImportError:
+    print("❌ email_validator n’est pas installé")
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'ok')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mabi.db'
@@ -69,15 +74,26 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class SignupForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired(), EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Repeat Password')
-    submit = SubmitField('Sign Up')
+    email = StringField('Email', validators=[
+        DataRequired(message="Ce champ est obligatoire."),
+        Email(message="Adresse email invalide.")
+    ])
+    password = PasswordField('Mot de passe', validators=[
+        DataRequired(message="Mot de passe requis."),
+        EqualTo('confirm', message="Les mots de passe ne correspondent pas.")
+    ])
+    confirm = PasswordField('Confirmer le mot de passe')
+    submit = SubmitField('Créer un compte')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Log In')
+    email = StringField('Email', validators=[
+        DataRequired(message="Ce champ est obligatoire."),
+        Email(message="Adresse email invalide.")
+    ])
+    password = PasswordField('Mot de passe', validators=[
+        DataRequired(message="Mot de passe requis.")
+    ])
+    submit = SubmitField('Connexion')
 
 VT_API_KEY = os.getenv('VT_API_KEY', 'e337abac5c0db3a50ee6fe5f485253e943cfaf4a7b80ccdfff2867edd0974df1')
 
@@ -169,6 +185,7 @@ def vulnscan():
 def history():
     histories = ScanHistory.query.filter_by(user_id=current_user.id).order_by(ScanHistory.timestamp.desc()).all()
     return render_template('history.html', histories=histories)
+
 @app.route('/export-history', methods=['POST'])
 @login_required
 def export_history():
@@ -201,45 +218,10 @@ def export_history():
         }
     )
 
-
-
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         u = User.query.filter_by(email=form.email.data).first()
         if u and u.check_password(form.password.data):
-            login_user(u); flash("Connexion réussie !","success"); return redirect(url_for('home'))
-        flash("Email ou mot de passe invalide.","danger")
-    return render_template('login.html', form=form)
-
-@app.route('/signup', methods=['GET','POST'])
-def signup():
-    form = SignupForm()
-    if form.validate_on_submit():
-        if User.query.filter_by(email=form.email.data).first():
-            flash("Email déjà utilisé.","warning"); return redirect(url_for('signup'))
-        u=User(email=form.email.data); u.set_password(form.password.data)
-        db.session.add(u); db.session.commit()
-        flash("Inscription réussie.","success"); return redirect(url_for('login'))
-    return render_template('signup.html', form=form)
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user(); flash("Déconnexion réussie.","info"); return redirect(url_for('login'))
-
-@app.route('/account')
-@login_required
-def account():
-    return render_template('account.html')
-
-@app.route('/about')
-@login_required
-def about():
-    return render_template('about.html')
-
-attach_security(app)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+            login_user(u);
