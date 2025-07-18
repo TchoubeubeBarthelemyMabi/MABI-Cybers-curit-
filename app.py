@@ -74,26 +74,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class SignupForm(FlaskForm):
-    email = StringField('Email', validators=[
-        DataRequired(message="Ce champ est obligatoire."),
-        Email(message="Adresse email invalide.")
-    ])
-    password = PasswordField('Mot de passe', validators=[
-        DataRequired(message="Mot de passe requis."),
-        EqualTo('confirm', message="Les mots de passe ne correspondent pas.")
-    ])
-    confirm = PasswordField('Confirmer le mot de passe')
-    submit = SubmitField('Créer un compte')
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('confirm', message='Passwords must match')])
+    confirm = PasswordField('Repeat Password')
+    submit = SubmitField('Sign Up')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[
-        DataRequired(message="Ce champ est obligatoire."),
-        Email(message="Adresse email invalide.")
-    ])
-    password = PasswordField('Mot de passe', validators=[
-        DataRequired(message="Mot de passe requis.")
-    ])
-    submit = SubmitField('Connexion')
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Log In')
 
 VT_API_KEY = os.getenv('VT_API_KEY', 'e337abac5c0db3a50ee6fe5f485253e943cfaf4a7b80ccdfff2867edd0974df1')
 
@@ -224,4 +213,16 @@ def login():
     if form.validate_on_submit():
         u = User.query.filter_by(email=form.email.data).first()
         if u and u.check_password(form.password.data):
-            login_user(u);
+            login_user(u)
+            flash("Connexion réussie !", "success")
+            return redirect(url_for('home'))
+        else:
+            flash("Email ou mot de passe invalide.", "danger")
+    return render_template('login.html', form=form)
+
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        if User.query.filter_by(email=form.email.data).first():
+            flash("
