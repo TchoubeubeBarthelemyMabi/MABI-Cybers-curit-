@@ -1,98 +1,113 @@
 <!doctype html>
-<html>
+<html lang="fr">
 <head>
-    <title>{{ title or " MABI-Cybersécurité" }}</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-    <style>
-        body {
-            background-image: url('{{ url_for('static', filename='bg.jpg') }}');
-            background-size: cover;
-            background-position: center;
-            font-family: 'Arial', sans-serif;
-            margin: 0; padding: 0; color: #333;
-        }
-        .header {
-            background: #2196F3;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: 700;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-        <header style="display:flex; align-items:center; padding:10px; background:#111; color:#fff;">
-  <img src="{{ url_for('static', filename='lg.jpg') }}" alt="lg.jpg" style="height:50px; margin-right:15px;">
-  <h1 style="font-size:24px;"> MABI-Cybersécurité</h1>
-</header>
-        nav {
-            background: #1976D2;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        nav a {
-            color: #fff;
-            margin: 0 15px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
-        nav a:hover {
-            color: #bbdefb;
-        }
-        .footer {
-            text-align: center;
-            padding: 15px;
-            background: #2196F3;
-            color: #fff;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            font-size: 14px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
-        }
-        .content {
-            padding: 40px 20px 100px;
-            min-height: 80vh;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .text-background {
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 20px 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-            color: #222;
-        }
-        .safe { color: green; }
-        .danger { color: red; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "MABI-Cybersécurité" }}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background-image: url('{{ url_for('static', filename='bg.jpg') }}');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Arial', sans-serif;
+      margin: 0; padding: 0; color: #333;
+    }
+    .header {
+      background: #2196F3;
+      color: #fff;
+      padding: 15px 10px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .logo-bar {
+      display: flex;
+      align-items: center;
+      background: #111;
+      color: #fff;
+      padding: 10px 15px;
+    }
+    .logo-bar img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    .logo-bar h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+    nav.navbar {
+      background-color: #1976D2;
+    }
+    nav .nav-link {
+      color: white !important;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .footer {
+      text-align: center;
+      padding: 15px;
+      background: #2196F3;
+      color: #fff;
+      font-size: 14px;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+      margin-top: auto;
+    }
+    .content {
+      padding: 30px 15px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .text-background {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      color: #222;
+    }
+    .safe { color: green; }
+    .danger { color: red; }
+  </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-<div class="header">🔒MABI-Cybersécurité</div>
+  <div class="header">🔒 MABI-Cybersécurité</div>
+  <div class="logo-bar">
+    <img src="{{ url_for('static', filename='lg.jpg') }}" alt="logo">
+    <h1>MABI-Cybersécurité</h1>
+  </div>
 
-<nav>
-    <a href="{{ url_for('home') }}">Accueil</a>
-    
-    <a href="{{ url_for('history') }}">Historique</a>
-    {% if current_user.is_authenticated %}
-        <a href="{{ url_for('account') }}">Mon compte</a>
-        <a href="{{ url_for('logout') }}">Déconnexion</a>
-    {% else %}
-        <a href="{{ url_for('login') }}">Connexion</a>
-        {# <a href="{{ url_for('signup') }}">Inscription</a> #}
-    {% endif %}
-    <a href="{{ url_for('vulnscan') }}">Scanner sécurité</a>
-    <a href="{{ url_for('about') }}">À propos</a>
-</nav>
+  <nav class="navbar navbar-expand-md">
+    <div class="container-fluid">
+      <button class="navbar-toggler text-white border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        ☰
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('history') }}">Historique</a></li>
+          {% if current_user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('account') }}">Mon compte</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Déconnexion</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Connexion</a></li>
+            <!-- <li class="nav-item"><a class="nav-link" href="{{ url_for('signup') }}">Inscription</a></li> -->
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('vulnscan') }}">Scanner sécurité</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">À propos</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<div class="content">
+  <div class="content">
     {% block content %}{% endblock %}
-</div>
+  </div>
 
-<div class="footer">© 2025  MABI-Cybersécurité — Tous droits réservés.</div>
+  <div class="footer">© 2025 MABI-Cybersécurité — Tous droits réservés.</div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
