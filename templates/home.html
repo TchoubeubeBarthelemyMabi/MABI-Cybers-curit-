@@ -1,33 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="text-background" style="text-align: center; max-width: 800px; margin: auto;">
+<div class="text-background text-center mx-auto" style="max-width: 800px;">
 
-  <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 15px;">
-    Bienvenue sur  MABI-Cybersécurité
+  <h2 class="fw-bold mb-3" style="font-size: 2rem;">
+    Bienvenue sur MABI-Cybersécurité
   </h2>
-  <p style="font-size: 18px; line-height: 1.6; max-width: 700px; margin: 0 auto 30px;">
+
+  <p class="lead mb-4" style="font-size: 1.1rem;">
     Protégez vos liens et sites web des menaces avec notre outil simple et fiable.<br>
     Votre sécurité est notre priorité.
   </p>
 
   <!-- Formulaire Vérification lien -->
-  <form method="POST" onsubmit="showLoader()" style="margin-bottom: 20px;">
-    <input type="text" name="url" placeholder="https://example.com"
-           style="width:80%; padding:12px; font-size:16px; border-radius:6px; border:1px solid #ccc" required>
-    <button type="submit"
-            style="padding:12px 25px; font-size:16px; cursor:pointer; border-radius:6px; background-color:#2196F3; color:white; border:none; margin-left:10px">
-      Vérifier ce lien
-    </button>
+  <form method="POST" onsubmit="showLoader()" class="row g-2 justify-content-center mb-3">
+    <div class="col-12 col-md-8">
+      <input type="text" name="url" placeholder="https://example.com"
+             class="form-control form-control-lg" required>
+    </div>
+    <div class="col-12 col-md-auto">
+      <button type="submit" class="btn btn-primary btn-lg w-100">
+        Vérifier ce lien
+      </button>
+    </div>
   </form>
 
-  <div id="loader"
-       style="display:none; margin:25px auto; width:40px; height:40px;
-              border:6px solid #f3f3f3; border-top:6px solid #2196F3;
-              border-radius:50%; animation:spin 1s linear infinite;">
+  <!-- Loader animation -->
+  <div id="loader" class="mx-auto" style="display:none; width:40px; height:40px;
+       border:6px solid #f3f3f3; border-top:6px solid #2196F3;
+       border-radius:50%; animation:spin 1s linear infinite;">
   </div>
 
   {% if result %}
-    <p class="result {{ result.status }}" style="font-size:18px; margin-top:20px;">
+    <p class="result {{ result.status }} mt-3 fs-5 fw-semibold">
       {{ result.message|safe }}
     </p>
   {% endif %}
